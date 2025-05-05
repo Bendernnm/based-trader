@@ -55,10 +55,15 @@ export class FetchRequest {
     }
 
     if (!fetchResponse.ok) {
-      throw new HttpError(
-        fetchResponse.status,
-        fetchResponseJson.message ? (fetchResponseJson.message as string) : 'Something went wrong',
-      );
+      let message: string = 'Something went wrong';
+
+      if (fetchResponseJson.message) {
+        message = fetchResponseJson.message as string;
+      } else if (fetchResponseJson.msg) {
+        message = fetchResponseJson.msg as string;
+      }
+
+      throw new HttpError(fetchResponse.status, message);
     }
 
     return {
